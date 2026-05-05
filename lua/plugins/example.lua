@@ -1,26 +1,6 @@
 -- since this is just an example spec, don't actually load anything here and return an empty spec
 -- stylua: ignore
-if true then return
-  {
-  "neovim/nvim-lspconfig",
-  dependencies = {
-    "Hoffs/omnisharp-extended-lsp.nvim",
-  },
-  opts = {
-    setup = {
-      omnisharp = function(_, opts)
-        local extended = require("omnisharp_extended")
-        opts.handlers = {
-          ["textDocument/definition"] = extended.handler,
-          ["textDocument/references"] = extended.handler,
-        }
-        require("lspconfig").omnisharp.setup(opts)
-        return true -- prevent LazyVim from setting it up again
-      end,
-    },
-  },
-
-} end
+if true then return {} end
 
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
 --

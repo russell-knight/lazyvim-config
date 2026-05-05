@@ -1,5 +1,6 @@
 return {
   "seblyng/roslyn.nvim",
+  commit = "ff43201", -- last commit compatible with nvim 0.11
   dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
     -- Detect OS for cross-platform compatibility
