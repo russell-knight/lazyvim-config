@@ -4,3 +4,5 @@
 
 -- Disable Snacks animations for instant Ctrl+U/Ctrl+D scrolling
 vim.g.snacks_animate = false
+
+
