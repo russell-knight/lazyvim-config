@@ -6,3 +6,5 @@
 vim.g.snacks_animate = false
 
 
+-- Keep 10 lines of context above/below the cursor (scrollEOF extends this past end of file)
+vim.opt.scrolloff = 10
