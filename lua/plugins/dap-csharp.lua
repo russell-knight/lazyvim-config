@@ -4,21 +4,19 @@ return {
     dependencies = { "rcarriga/nvim-dap-ui" },
     opts = function()
       local dap = require("dap")
-      dap.adapters.coreclr = {
-        type = "executable",
-        command = vim.fn.exepath("netcoredbg"),
-        args = { "--interpreter=vscode" },
-      }
+      -- The `netcoredbg` adapter is set up by the lang.dotnet extra; this only replaces the C# configurations
       dap.configurations.cs = {
         {
-          type = "coreclr",
+          type = "netcoredbg",
           name = "Launch .NET project",
           request = "launch",
           program = function()
-            -- Default to the project DLL in the current directory
+            -- Default to the project DLL for whatever target framework has been built
             local cwd = vim.fn.getcwd()
             local proj = vim.fn.fnamemodify(cwd, ":t")
-            return vim.fn.input("Path to dll: ", cwd .. "/bin/Debug/net9.0/" .. proj .. ".dll", "file")
+            local dlls = vim.fn.glob(cwd .. "/bin/Debug/net*/" .. proj .. ".dll", false, true)
+            local default = dlls[#dlls] or (cwd .. "/bin/Debug/")
+            return vim.fn.input("Path to dll: ", default, "file")
           end,
           cwd = function()
             return vim.fn.getcwd()
@@ -29,7 +27,7 @@ return {
           stopAtEntry = false,
         },
         {
-          type = "coreclr",
+          type = "netcoredbg",
           name = "Attach to process",
           request = "attach",
           processId = function()
