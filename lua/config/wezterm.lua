@@ -34,6 +34,19 @@ local directions = { h = "Left", j = "Down", k = "Up", l = "Right" }
 for key, direction in pairs(directions) do
   vim.keymap.set({ "n", "i", "t" }, "<A-" .. key .. ">", function()
     local win = vim.api.nvim_get_current_win()
+    -- Floating windows aren't part of the split layout, so wincmd would move to a split hidden behind them
+    if vim.api.nvim_win_get_config(win).relative ~= "" then
+      local zoom = Snacks.zen.win
+      if zoom and zoom:valid() and zoom.win == win then
+        -- Like WezTerm's unzoom_on_switch_pane: leave zoom (Alt+Z), then move from the split underneath
+        Snacks.zen.zoom()
+        win = vim.api.nvim_get_current_win()
+      else
+        -- Other floats (lazygit, terminals, pickers): go straight to the neighbouring WezTerm pane
+        set_user_var("WEZTERM_NAV", direction .. ":" .. vim.uv.hrtime())
+        return
+      end
+    end
     vim.cmd.wincmd(key)
     -- Already at the edge of Neovim's splits: ask WezTerm to move to the next pane
     if vim.api.nvim_get_current_win() == win then
@@ -67,5 +80,5 @@ vim.keymap.set({ "n", "i", "t" }, "<A-w>", function()
 end, { desc = "Close Window" })
 
 vim.keymap.set({ "n", "i", "t" }, "<A-z>", function()
-  Snacks.zoom()
+  Snacks.zen.zoom()
 end, { desc = "Toggle Zoom Window" })
